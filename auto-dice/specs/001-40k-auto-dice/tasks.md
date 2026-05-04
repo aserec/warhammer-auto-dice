@@ -90,7 +90,7 @@
 
 ### Tests for User Story 2 (required per constitution) ⚠️
 
-- [ ] T032 [P] [US2] Add golden JSON under `packages/domain/src/ingestion/__fixtures__/` (copy or trim from `auto-dice/test-data/example-votann-list.json` and `auto-dice/test-data/example-tzeentch-list.json`) and Vitest `packages/domain/src/ingestion/json-roster-parser.test.ts` for happy + malformed paths
+- [ ] T032 [P] [US2] Commit **full copies** (or workspace-legal symlinks) of `auto-dice/test-data/example-votann-list.json` and `auto-dice/test-data/example-tzeentch-list.json` under `packages/domain/src/ingestion/__fixtures__/`—**do not hand-truncate** arbitrary subtrees (risks dropping weapons/profiles). If CI size ever requires smaller files, add **separate** `*-smoke.json` fixtures that still include at least one complete unit with weapons for combat mapping tests, documented in `packages/domain/src/ingestion/__fixtures__/README.md`. Vitest `packages/domain/src/ingestion/json-roster-parser.test.ts` covers happy + malformed paths
 - [ ] T033 [P] [US2] Playwright `apps/web/e2e/us2-json-import.spec.ts` imports fixture JSON (paste or `readFile` in test), asserts review table shows units/weapons from list
 
 ### Implementation for User Story 2
@@ -212,7 +212,7 @@
 
 ### Tests for User Story 3 (required per constitution) ⚠️
 
-- [ ] T074 [P] [US3] Vitest `apps/web/lib/bcp/bcp-adapter.test.ts` using `global.fetch` mock for success + `rate_limited` + `network`
+- [ ] T074 [P] [US3] Vitest `apps/web/lib/bcp/bcp-adapter.test.ts` using `global.fetch` mock for success + `rate_limited` + `network`; include a **minimal SC-005 guard**: on mocked success, assert wall time from call start to resolved lists is **under 30_000 ms** (`performance.now()`), so accidental synchronous stalls or runaway retries fail CI while normal fast mocks stay well under the ceiling
 - [ ] T075 [P] [US3] Playwright `apps/web/e2e/us3-bcp-fallback.spec.ts` intercepts route to force error, expects **manual JSON list import** fallback UI from `apps/web/components/bcp/bcp-import-flow.tsx`
 
 ### Implementation for User Story 3
@@ -235,9 +235,10 @@
 - [ ] T082 [P] Add Storybook story `apps/web/components/combat/dice-stage-breakdown.stories.tsx`
 - [ ] T083 [P] Add Storybook story `apps/web/components/roster/model-stack-control.stories.tsx`
 - [ ] T084 [P] Add Storybook story `apps/web/components/combat/modifier-bar.stories.tsx`
-- [ ] T085 Run `.cursor/skills/custom/pre-commit-design-review/SKILL.md` on the feature diff vs `HEAD` after Phase 10 Storybook/PWA/doc edits per constitution (final polish pass; per-story reviews already above)
-- [ ] T086 Document PWA manual test results and Lighthouse scores in `apps/web/docs/PWA-VERIFICATION.md` (create folder if missing)
-- [ ] T087 Validate commands in [quickstart.md](./quickstart.md) end-to-end and update `specs/001-40k-auto-dice/quickstart.md` if commands drift
+- [ ] T085 [P] Add Storybook story `apps/web/components/roster/list-review-table.stories.tsx` (aligns [research.md](./research.md) §9 + constitution Storybook gate for non-trivial roster UI)
+- [ ] T086 Run `.cursor/skills/custom/pre-commit-design-review/SKILL.md` on the feature diff vs `HEAD` after Phase 10 Storybook/PWA/doc edits per constitution (final polish pass; per-story reviews already above)
+- [ ] T087 Document PWA manual test results and Lighthouse scores in `apps/web/docs/PWA-VERIFICATION.md` (create folder if missing)
+- [ ] T088 Validate commands in [quickstart.md](./quickstart.md) end-to-end and update `specs/001-40k-auto-dice/quickstart.md` if commands drift
 
 ---
 
@@ -273,7 +274,7 @@ US1 → US3 (BCP)  [optional parallel after US1]
 3. Adapters and browser I/O (`apps/web/lib/**`)  
 4. UI (`apps/web/components/**`, `apps/web/app/**`)  
 5. Repository / store integration  
-6. Run the story’s **pre-commit design review** task (same skill as Phase 10 T085) on the feature diff vs `HEAD` after substantive UI for that story
+6. Run the story’s **pre-commit design review** task (`.cursor/skills/custom/pre-commit-design-review/SKILL.md`, same skill invoked again in Phase 10 **T086** after Storybook/PWA/doc polish) on the feature diff vs `HEAD` after substantive UI for that story
 
 ### Parallel Opportunities
 
@@ -307,7 +308,7 @@ apps/web/e2e/us7-roll-mobile.spec.ts
 
 4. Add **US5** (model stacks) → rerun attack + roll tests  
 5. Add **US3** (BCP) with feature flag → contract tests + mocked E2E  
-6. **Phase 10** polish (Storybook, PWA verification doc, final design review **T085**)
+6. **Phase 10** polish (Storybook, PWA verification doc, final design review **T086**)
 
 ### Suggested MVP scope
 
@@ -320,7 +321,7 @@ apps/web/e2e/us7-roll-mobile.spec.ts
 
 | Metric | Value |
 |--------|--------|
-| **Total tasks** | 87 |
+| **Total tasks** | 88 |
 | **Phase 1** | 14 |
 | **Phase 2** | 8 |
 | **US1** | 9 (2 test + 6 impl + 1 design review) |
@@ -330,10 +331,10 @@ apps/web/e2e/us7-roll-mobile.spec.ts
 | **US7** | 10 (3 test + 6 impl + 1 design review) |
 | **US5** | 7 (2 test + 4 impl + 1 design review) |
 | **US3** | 8 (2 test + 5 impl + 1 design review) |
-| **Polish** | 6 |
-| **Parallel-friendly tasks** | 31 marked `[P]` |
+| **Polish** | 8 |
+| **Parallel-friendly tasks** | 33 marked `[P]` |
 
-**Format validation**: All tasks use `- [ ]`, sequential **T001–T087**, story phases include **[USn]**, and each line names at least one **path** under `auto-dice/` (`apps/web/...`, `packages/domain/...`, `test-data/...`, `tooling/...`, or `eslint.config.mjs`).
+**Format validation**: All tasks use `- [ ]`, sequential **T001–T088**, story phases include **[USn]**, and each line names at least one **path** under `auto-dice/` (`apps/web/...`, `packages/domain/...`, `test-data/...`, `tooling/...`, or `eslint.config.mjs`).
 
 ---
 

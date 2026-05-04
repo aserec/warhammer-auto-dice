@@ -113,6 +113,7 @@ All items marked NEEDS CLARIFICATION in an earlier draft are resolved there with
 | Domain | Vitest | **JSON roster** parsers (fixtures from `test-data/`), modifier order, full pipeline golden tests with seeded RNG |
 | UI components | Vitest + Storybook | Dice row, stage summary, modifier toggles |
 | App routes | Playwright | Happy paths + BCP error fallback (mocked); **mobile viewport** smoke on configure → roll |
+| BCP adapter | Vitest | **SC-005 ceiling guard**: mocked success path must finish **under 30 s** wall time (`tasks.md` **T074**); real p95 in staging/manual checklist |
 
 ## Mobile & PWA (implementation checklist)
 

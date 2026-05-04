@@ -36,6 +36,7 @@
 - Cross-session identical-model count persistence is explicitly deferred inside User Story 5 to match stakeholder phrasing (“remains till later”).
 - **Update (same day)**: FR-017/FR-018 and SC-006 add **mobile layout** and **PWA installability**; FR-018 names PWA/manifest/service worker intentionally as stakeholder-requested acceptance criteria. Implementation choices live in `plan.md` / `research.md`.
 - **Update (2026-05-04)**: US2 / FR-003 / FR-004 / `research.md` §4 align on **JSON roster import**; **weapons and model profiles** come from imported list JSON. Golden examples: `auto-dice/test-data/example-votann-list.json`, `auto-dice/test-data/example-tzeentch-list.json` (referenced across `plan.md`, `data-model.md`, `contracts/list-parser-plugin.md`, `tasks.md`, `quickstart.md`).
+- **Update (2026-05-04)**: `tasks.md` **T085** adds Storybook for **ListReviewTable** (matches `research.md` §9). **T074** adds a minimal **30 s** wall-time guard for mocked successful BCP preload (`SC-005` ceiling in CI). **T032** requires **full** golden JSON copies or documented `*-smoke.json` fixtures—no arbitrary trims.
 
 ## Notes
 

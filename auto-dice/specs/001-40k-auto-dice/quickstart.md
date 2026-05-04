@@ -80,6 +80,8 @@ pnpm typecheck
 
 Exact names are finalized at implementation; BCP remains optional behind flag.
 
+**SC-005 (preload latency)**: `tasks.md` **T074** requires a minimal Vitest guard that mocked successful BCP list fetch resolves within **30 seconds** wall time—real p95 behavior is still validated in a configured environment or manual checklist, not only this ceiling test.
+
 ## Useful paths
 
 | Artifact | Path |

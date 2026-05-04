@@ -26,6 +26,8 @@
 
 **Alternatives considered**: Client-only scraping (rejected: brittle, CORS, ToS risk); block MVP on real BCP API (rejected: delays **JSON list import** value).
 
+**SC-005 / CI**: A **minimal** Vitest guard (see `tasks.md` **T074**) asserts mocked successful preload completes **under 30 s** wall time so runaway client/server work fails fast; **p95 in a real environment** remains a separate staging or manual gate.
+
 ## 4. Army list import format (MVP)
 
 **Decision**: Parser architecture remains **strategy per format** (see `contracts/list-parser-plugin.md`). **MVP ships one primary format: JSON roster documents** produced by common list builders (Battlescribe-style `roster` → `forces` / nested `selections` trees). **Canonical golden files** in the repo: `auto-dice/test-data/example-votann-list.json` and `auto-dice/test-data/example-tzeentch-list.json`. Ingestion maps these documents into domain `Roster` / `Unit` / `WeaponProfile` / model rows; **weapons and model profiles used in combat are not authored independently**—they always come from the imported JSON (plus in-session model counts). Additional formats (plain-text exports, second JSON dialect) are **P2** once the JSON path is stable.
