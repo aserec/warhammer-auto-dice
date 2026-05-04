@@ -2,7 +2,7 @@
 
 **Feature**: `001-40k-auto-dice` | **Date**: 2026-05-04
 
-Bounded contexts: **Game & Roster**, **Ingestion**, **Combat Resolution**.
+Bounded contexts: **Game & Roster**, **Ingestion**, **Rules catalog (local)**, **Combat Resolution**.
 
 ---
 
@@ -34,8 +34,9 @@ Bounded contexts: **Game & Roster**, **Ingestion**, **Combat Resolution**.
 | `source` | `paste \| bcp` + metadata (`importedAt`, optional `bcpMatchRef`). |
 | `rawText` | Original paste (optional if size policy trims; prefer keep for re-parse). |
 | `units` | Ordered list of `Unit`. |
+| `requiredRulesEntityKeys` | Deduped list of `RulesEntityKey` (from parser + mapper) that **must** exist in the **rules catalog** before this roster is playable. |
 
-**Invariants**: Weapon and profile references inside units are internally consistent (parser validation).
+**Invariants**: Weapon and profile references inside units are internally consistent (parser validation); **no roster may transition to “committed / ready” until every `requiredRulesEntityKey` has a corresponding `RulesCatalogEntry` persisted** (see FR-019).
 
 ### `Unit`
 
@@ -44,7 +45,7 @@ Bounded contexts: **Game & Roster**, **Ingestion**, **Combat Resolution**.
 | `id` | UUID. |
 | `name` | Display name from list. |
 | `modelRows` | Non-empty list of `ModelRow`. |
-| `weapons` | `WeaponProfile` catalog entries attachable to rows (may be shared references). |
+| `weapons` | References into the **rules catalog** (by `RulesEntityKey`) plus display names from list text; resolved `WeaponProfile` values are read from IndexedDB at runtime after hydration. |
 
 ### `ModelRow`
 
@@ -55,15 +56,39 @@ Bounded contexts: **Game & Roster**, **Ingestion**, **Combat Resolution**.
 
 **Invariants**: `count` is integer; weapons on row must exist in unit catalog; destroying last model marks unit as **eliminated** for attack selection.
 
-### `WeaponProfile` (value object)
+### `WeaponProfile` (value object — materialized from rules catalog)
+
+Populated from **`RulesCatalogEntry.normalized`** after Wahapedia hydration (not invented from list text).
 
 | Field | Description |
 |-------|-------------|
-| `id`, `name` | Identity. |
+| `catalogKey` | `RulesEntityKey` linking back to IndexedDB row. |
+| `id`, `name` | Identity (name may mirror Wahapedia). |
 | `type` | `ranged \| melee` (or `both` with phase gate at use site). |
 | `attacks` | Numeric or dice expression + user override field for variable counts. |
-| `skill`, `strength`, `ap`, `damage` | As per rules profile (types allow `"D3"` etc.). |
+| `skill`, `strength`, `ap`, `damage` | As per Wahapedia-backed profile (types allow `"D3"` etc.). |
 | `keywords` | Optional strings for special interactions (future). |
+
+---
+
+## Rules catalog (local IndexedDB)
+
+Shared across **all games** on the same browser origin. Backed by **`RulesCatalogRepository`** (port); IndexedDB implementation uses an object store distinct from `Game` snapshots.
+
+### `RulesCatalogEntry`
+
+| Field | Description |
+|-------|-------------|
+| `key` | Stable `RulesEntityKey` (see `contracts/wahapedia-rules-catalog.md`). |
+| `normalized` | JSON matching domain expectations for model profile and/or weapon profile. |
+| `fetchedAt` | ISO timestamp. |
+| `sourceEtag` | Optional upstream validator for refresh policy. |
+
+**Invariants**: Writes are **upserts** by `key`; partial roster hydration MUST NOT mark roster ready (spec FR-021).
+
+### `RulesEntityKey` (value object)
+
+Opaque stable key from parser / mapper; must uniquely identify the Wahapedia resource for a given rules edition baseline (`research.md` §1).
 
 ---
 
@@ -77,8 +102,9 @@ Bounded contexts: **Game & Roster**, **Ingestion**, **Combat Resolution**.
 | `roster` | Partial or full `Roster` candidate (see `contracts/list-parser-plugin.md`). |
 | `diagnostics` | Errors/warnings with line hints. |
 | `formatId` | Strategy id (`gw-text-v1`, etc.). |
+| `requiredRulesEntityKeys` | Deduped `RulesEntityKey[]` for downstream Wahapedia batch fetch (may be empty only if parser embeds full stats—**not** allowed for MVP; see spec FR-019). |
 
-**State transition**: `raw` → `parsed` → `userConfirmed` → merged into `Game`.
+**State transition**: `raw` → `parsed` → **`hydrating` (Wahapedia + rules catalog)** → `userConfirmed` → merged into `Game`.
 
 ### `BcpMatchRef` (value object)
 
@@ -132,6 +158,7 @@ Bounded contexts: **Game & Roster**, **Ingestion**, **Combat Resolution**.
 ## Validation rules (cross-cutting)
 
 - List paste: reject with diagnostics if zero units parsed.
+- Rules catalog: reject “ready” if any `requiredRulesEntityKey` missing after hydration attempt.
 - Attack: block if weapon illegal for phase or model row.
 - Modifiers: reject conflicting pair per engine rules table (see tests).
 - Dice: cap per roll configurable constant to avoid UI freeze (soft warn, hard cap TBD in tasks).

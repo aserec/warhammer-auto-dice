@@ -77,8 +77,9 @@ pnpm typecheck
 | `BCP_API_BASE` | Server-side BCP adapter base URL (if used). |
 | `BCP_API_TOKEN` | Server-only secret for BCP (never `NEXT_PUBLIC_*`). |
 | `FEATURE_BCP_IMPORT` | `"true"` to expose BCP UI paths. |
+| `WAHAPEDIA_FETCH_*` | Server-side Wahapedia proxy tuning (e.g. base URL override, user-agent, rate-limit knobs)—**never** `NEXT_PUBLIC_*` for secrets. |
 
-Exact names are finalized at implementation; BCP remains optional behind flag.
+Exact names are finalized at implementation; BCP remains optional behind flag. **Wahapedia** access is always **server-side** (Route Handler); the browser talks only to your Next.js API.
 
 ## Useful paths
 

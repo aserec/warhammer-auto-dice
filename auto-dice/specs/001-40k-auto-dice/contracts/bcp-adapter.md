@@ -23,7 +23,7 @@ Isolate **BCP** behind an application-level port so domain and UI depend on stab
 
 | Field | Description |
 |-------|-------------|
-| `playerOneListText` | Raw text or HTML suitable for `ListParserPlugin` pipeline. |
+| `playerOneListText` | Raw text or HTML suitable for `ListParserPlugin` pipeline (then **Wahapedia hydration** + rules catalog per `wahapedia-rules-catalog.md`). |
 | `playerTwoListText` | Same. |
 | `metadata` | Display names, faction names, etc., when available. |
 
