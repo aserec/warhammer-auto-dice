@@ -1,6 +1,6 @@
 # Contract: Dice resolution engine (domain boundary)
 
-**Version**: 0.1 | **Date**: 2026-05-04
+**Version**: 0.2 | **Date**: 2026-05-04
 
 ## Purpose
 
@@ -13,7 +13,7 @@ Define the **input/output contract** for pure combat resolution in `packages/dom
 | Property | Required | Description |
 |----------|------------|-------------|
 | `rulesProfileId` | yes | e.g. `wh40k-10e-v1`. |
-| `attackConfiguration` | yes | Immutable snapshot: phase, units, weapon, attack count, participating model rows, defender save + FNP. |
+| `attackConfiguration` | yes | Immutable snapshot: phase, units, weapon, attack count, participating model rows, defender save + FNP. **Weapon and defender profile numeric fields** originate from the **imported list JSON → roster mapping** (see `test-data/` examples and `list-parser-plugin.md`); the engine consumes the snapshot only. |
 | `modifiers` | yes | Ordered list of normalized modifier descriptors (`kind`, optional `value`, `scope`). |
 | `rng` | yes | `RngPort` implementation (seeded in tests). |
 

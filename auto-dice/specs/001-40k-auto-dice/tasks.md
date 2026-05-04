@@ -82,23 +82,23 @@
 - [ ] T031 [US1] Run `.cursor/skills/custom/pre-commit-design-review/SKILL.md` on the feature diff vs `HEAD` after this story's substantive UI batch per constitution (scope: `apps/web/app/games/**`, `apps/web/lib/game/**`)
 ---
 
-## Phase 4: User Story 2 — Import army lists by pasting (Priority: P1)
+## Phase 4: User Story 2 — Import army lists (JSON roster) (Priority: P1)
 
-**Goal**: Paste-supported format(s) → structured `Roster` draft + diagnostics; review UI before commit.
+**Goal**: **JSON roster** import (see `auto-dice/test-data/example-votann-list.json`, `auto-dice/test-data/example-tzeentch-list.json`) → structured `Roster` draft + diagnostics; **weapons and model profiles** come only from mapped list data; review UI before commit.
 
-**Independent Test**: Golden fixtures parse; malformed paste shows errors (spec US2).
+**Independent Test**: Golden fixtures (aligned to `test-data/`) parse in Vitest; malformed JSON shows errors (spec US2).
 
 ### Tests for User Story 2 (required per constitution) ⚠️
 
-- [ ] T032 [P] [US2] Add golden fixture text files under `packages/domain/src/ingestion/__fixtures__/*.txt` and Vitest `packages/domain/src/ingestion/default-format-parser.test.ts`
-- [ ] T033 [P] [US2] Playwright `apps/web/e2e/us2-paste-import.spec.ts` pastes fixture, asserts review table visible
+- [ ] T032 [P] [US2] Add golden JSON under `packages/domain/src/ingestion/__fixtures__/` (copy or trim from `auto-dice/test-data/example-votann-list.json` and `auto-dice/test-data/example-tzeentch-list.json`) and Vitest `packages/domain/src/ingestion/json-roster-parser.test.ts` for happy + malformed paths
+- [ ] T033 [P] [US2] Playwright `apps/web/e2e/us2-json-import.spec.ts` imports fixture JSON (paste or `readFile` in test), asserts review table shows units/weapons from list
 
 ### Implementation for User Story 2
 
 - [ ] T034 [US2] Define parser plugin types per [contracts/list-parser-plugin.md](./contracts/list-parser-plugin.md) in `packages/domain/src/ingestion/list-parse-result.ts` and `packages/domain/src/ingestion/list-parser-plugin.ts`
-- [ ] T035 [US2] Implement first parser strategy in `packages/domain/src/ingestion/strategies/default-list-parser.ts` (MVP single format from [research.md](./research.md) §4)
-- [ ] T036 [US2] Map parse output to `Roster` / `Unit` / `WeaponProfile` shapes in `packages/domain/src/ingestion/map-to-roster.ts`
-- [ ] T037 [US2] Add `apps/web/components/roster/paste-import-dialog.tsx` using shadcn `Dialog`, `Textarea`, and error list from diagnostics
+- [ ] T035 [US2] Implement first parser strategy in `packages/domain/src/ingestion/strategies/json-roster-parser.ts` (MVP **JSON roster** format from [research.md](./research.md) §4, validated against `auto-dice/test-data/*.json`)
+- [ ] T036 [US2] Map parse output to `Roster` / `Unit` / `WeaponProfile` shapes in `packages/domain/src/ingestion/map-to-roster.ts` (profiles + weapons **only** from list document)
+- [ ] T037 [US2] Add `apps/web/components/roster/paste-import-dialog.tsx` using shadcn `Dialog`, `Textarea` (JSON paste), and error list from diagnostics; wire copy from `auto-dice/test-data/` for dev smoke if useful
 - [ ] T038 [US2] Add `apps/web/components/roster/list-review-table.tsx` for confirming parsed units before attach
 - [ ] T039 [US2] Integrate attach flow into `apps/web/app/games/[gameId]/page.tsx` (or `apps/web/app/games/[gameId]/lists/page.tsx`) updating `Game` via store + repository
 
@@ -176,7 +176,7 @@
 - [ ] T064 [US7] Add `apps/web/components/combat/roll-button.tsx` calling domain resolver with injected `SeededRng` in tests and `BrowserRng` in app from `apps/web/lib/rng/browser-rng.ts`
 - [ ] T065 [US7] Persist last `DiceResolution` into game history via `packages/domain/src/game/resolution-history.ts` and `indexeddb-game-repository.ts`
 
-**Checkpoint**: Vertical slice **create → paste → configure → modify → roll** works (core MVP).
+**Checkpoint**: Vertical slice **create → import JSON lists → configure → modify → roll** works (core MVP).
 
 - [ ] T066 [US7] Run `.cursor/skills/custom/pre-commit-design-review/SKILL.md` on the feature diff vs `HEAD` after this story's substantive UI batch per constitution (scope: `apps/web/components/combat/**`, `apps/web/hooks/**`)
 ---
@@ -206,14 +206,14 @@
 
 ## Phase 9: User Story 3 — Best Coast Pairings preload (Priority: P2)
 
-**Goal**: Server fetch + TanStack Query + fallback to paste per [contracts/bcp-adapter.md](./contracts/bcp-adapter.md).
+**Goal**: Server fetch + TanStack Query + fallback to **manual JSON list import** per [contracts/bcp-adapter.md](./contracts/bcp-adapter.md).
 
-**Independent Test**: Mock fetch tests + E2E error path falls back to paste (spec US3).
+**Independent Test**: Mock fetch tests + E2E error path falls back to **JSON import UI** (spec US3).
 
 ### Tests for User Story 3 (required per constitution) ⚠️
 
 - [ ] T074 [P] [US3] Vitest `apps/web/lib/bcp/bcp-adapter.test.ts` using `global.fetch` mock for success + `rate_limited` + `network`
-- [ ] T075 [P] [US3] Playwright `apps/web/e2e/us3-bcp-fallback.spec.ts` intercepts route to force error, expects paste fallback UI from `apps/web/components/bcp/bcp-import-flow.tsx`
+- [ ] T075 [P] [US3] Playwright `apps/web/e2e/us3-bcp-fallback.spec.ts` intercepts route to force error, expects **manual JSON list import** fallback UI from `apps/web/components/bcp/bcp-import-flow.tsx`
 
 ### Implementation for User Story 3
 
@@ -223,7 +223,7 @@
 - [ ] T079 [US3] Add TanStack hook `apps/web/lib/bcp/use-bcp-match.ts` (query key includes `eventId`, `matchId`)
 - [ ] T080 [US3] Add `apps/web/components/bcp/bcp-import-flow.tsx` and entry from `apps/web/app/games/new/page.tsx` behind `process.env.FEATURE_BCP_IMPORT`
 
-**Checkpoint**: BCP path optional; paste always works.
+**Checkpoint**: BCP path optional; **JSON list import** always works.
 
 - [ ] T081 [US3] Run `.cursor/skills/custom/pre-commit-design-review/SKILL.md` on the feature diff vs `HEAD` after this story's substantive UI batch per constitution (scope: `apps/web/components/bcp/**`, `apps/web/app/api/bcp/**`, `apps/web/lib/bcp/**`)
 ---
@@ -333,7 +333,7 @@ apps/web/e2e/us7-roll-mobile.spec.ts
 | **Polish** | 6 |
 | **Parallel-friendly tasks** | 31 marked `[P]` |
 
-**Format validation**: All tasks use `- [ ]`, sequential **T001–T087**, story phases include **[USn]**, and each line names at least one **path** under `auto-dice/` (`apps/web/...` or `packages/domain/...` or `tooling/...` or `eslint.config.mjs`).
+**Format validation**: All tasks use `- [ ]`, sequential **T001–T087**, story phases include **[USn]**, and each line names at least one **path** under `auto-dice/` (`apps/web/...`, `packages/domain/...`, `test-data/...`, `tooling/...`, or `eslint.config.mjs`).
 
 ---
 
@@ -341,7 +341,8 @@ apps/web/e2e/us7-roll-mobile.spec.ts
 
 - When a task touches `packages/domain`, follow **red → green → refactor** with Vitest.  
 - After each story checkpoint, run **`pnpm test`** at root, **targeted Playwright** for that story’s `apps/web/e2e/us*.spec.ts`, and the story’s **pre-commit design review** checkbox.  
-- **BCP secrets** never use `NEXT_PUBLIC_*` prefix (see [quickstart.md](./quickstart.md)).
+- **BCP secrets** never use `NEXT_PUBLIC_*` prefix (see [quickstart.md](./quickstart.md)).  
+- **Golden roster JSON** for shapes, weapons, and profiles: `auto-dice/test-data/example-votann-list.json`, `auto-dice/test-data/example-tzeentch-list.json`.
 
 ---
 

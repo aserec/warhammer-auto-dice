@@ -23,7 +23,7 @@ Isolate **BCP** behind an application-level port so domain and UI depend on stab
 
 | Field | Description |
 |-------|-------------|
-| `playerOneListText` | Raw text or HTML suitable for `ListParserPlugin` pipeline. |
+| `playerOneListText` | **JSON roster document** (same contract as manual import / `ListParserPlugin`) or legacy raw text when the upstream source only provides text. |
 | `playerTwoListText` | Same. |
 | `metadata` | Display names, faction names, etc., when available. |
 
@@ -44,7 +44,7 @@ Isolate **BCP** behind an application-level port so domain and UI depend on stab
 
 - Provide **fixture JSON** for success and each `code`.
 - Vitest tests the adapter with **mock `fetch`**.
-- Playwright covers UI fallback to paste when `retryable` or `not_found`.
+- Playwright covers UI fallback to **manual JSON list import** when `retryable` or `not_found`.
 
 ## Compliance
 

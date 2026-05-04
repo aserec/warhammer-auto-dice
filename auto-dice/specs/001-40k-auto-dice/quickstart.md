@@ -87,3 +87,6 @@ Exact names are finalized at implementation; BCP remains optional behind flag.
 | Spec | `specs/001-40k-auto-dice/spec.md` |
 | Plan | `specs/001-40k-auto-dice/plan.md` |
 | Domain contracts | `specs/001-40k-auto-dice/contracts/` |
+| Golden roster JSON (ingestion / E2E fixtures) | `test-data/example-votann-list.json`, `test-data/example-tzeentch-list.json` |
+
+Use these JSON files as the **authoritative examples** for roster shape, **model profiles**, and **weapons** loaded into the domain after import.

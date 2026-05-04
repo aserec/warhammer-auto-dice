@@ -20,19 +20,19 @@
 
 ## 3. Best Coast Pairings integration
 
-**Decision**: Treat BCP as an **external read-only dependency** behind a **`BcpListSource` port** (interface in domain or `packages/domain` ingestion layer). **Next.js Route Handlers** (or Server Actions) perform HTTP fetches server-side so secrets and rate limits stay off the client. Ship MVP with **manual paste** always available; BCP behind **feature flag** + env-based credentials or public-read endpoints as discovered during implementation. Automated tests use **fixture JSON** and **mock fetch**, not live BCP.
+**Decision**: Treat BCP as an **external read-only dependency** behind a **`BcpListSource` port** (interface in domain or `packages/domain` ingestion layer). **Next.js Route Handlers** (or Server Actions) perform HTTP fetches server-side so secrets and rate limits stay off the client. Ship MVP with **manual JSON list import** (same conceptual document as `test-data` examples) always available; BCP behind **feature flag** + env-based credentials or public-read endpoints as discovered during implementation. Automated tests use **fixture JSON** (including `auto-dice/test-data/*.json`) and **mock fetch**, not live BCP.
 
 **Rationale**: Spec FR-006 requires graceful degradation; BCP has no stable public contract in this document—adapter isolation prevents domain coupling.
 
-**Alternatives considered**: Client-only scraping (rejected: brittle, CORS, ToS risk); block MVP on real BCP API (rejected: delays paste-first value).
+**Alternatives considered**: Client-only scraping (rejected: brittle, CORS, ToS risk); block MVP on real BCP API (rejected: delays **JSON list import** value).
 
-## 4. Army list paste formats (MVP)
+## 4. Army list import format (MVP)
 
-**Decision**: Parser architecture is **strategy per format** (see `contracts/list-parser-plugin.md`). **MVP ships one primary format** chosen from real sample files gathered at implementation start (candidates: common **GW / Wahapedia / app** text exports). Second format is **P2** once first is stable.
+**Decision**: Parser architecture remains **strategy per format** (see `contracts/list-parser-plugin.md`). **MVP ships one primary format: JSON roster documents** produced by common list builders (Battlescribe-style `roster` → `forces` / nested `selections` trees). **Canonical golden files** in the repo: `auto-dice/test-data/example-votann-list.json` and `auto-dice/test-data/example-tzeentch-list.json`. Ingestion maps these documents into domain `Roster` / `Unit` / `WeaponProfile` / model rows; **weapons and model profiles used in combat are not authored independently**—they always come from the imported JSON (plus in-session model counts). Additional formats (plain-text exports, second JSON dialect) are **P2** once the JSON path is stable.
 
-**Rationale**: Spec allows multiple formats but requires golden tests; one format keeps MVP shippable.
+**Rationale**: Real project data already exists as large JSON lists; avoids ambiguous text parsing for MVP while still meeting spec testability with fixtures.
 
-**Alternatives considered**: Universal parser (rejected: unrealistic).
+**Alternatives considered**: Text-only paste first (superseded: repo standard is JSON examples); universal parser (rejected: unrealistic).
 
 ## 5. Persistence (session scope)
 

@@ -4,6 +4,8 @@
 
 Bounded contexts: **Game & Roster**, **Ingestion**, **Combat Resolution**.
 
+**List source of truth**: For MVP, **weapon profiles and model profiles** are **materialized only from imported list JSON** mapped into this model (see `auto-dice/test-data/example-votann-list.json` and `example-tzeentch-list.json` for representative document shape). The app does not maintain a parallel catalog of stats for those fields.
+
 ---
 
 ## Game & Roster
@@ -31,11 +33,12 @@ Bounded contexts: **Game & Roster**, **Ingestion**, **Combat Resolution**.
 
 | Field / child | Description |
 |----------------|-------------|
-| `source` | `paste \| bcp` + metadata (`importedAt`, optional `bcpMatchRef`). |
-| `rawText` | Original paste (optional if size policy trims; prefer keep for re-parse). |
+| `source` | `json \| paste \| bcp` + metadata (`importedAt`, optional `bcpMatchRef`, optional `formatId`). |
+| `rawPayload` | Original **JSON document** as string (preferred for `json` source) or other raw import bytes/text for diagnostics and re-parse. |
+| `rawText` | Legacy/plain-text capture when `source` is `paste` (optional; may be empty when only JSON is used). |
 | `units` | Ordered list of `Unit`. |
 
-**Invariants**: Weapon and profile references inside units are internally consistent (parser validation).
+**Invariants**: Weapon and profile references inside units are internally consistent with the **imported list document** (ingestion validation); domain does not invent weapons not present in the roster JSON mapping.
 
 ### `Unit`
 
@@ -44,7 +47,7 @@ Bounded contexts: **Game & Roster**, **Ingestion**, **Combat Resolution**.
 | `id` | UUID. |
 | `name` | Display name from list. |
 | `modelRows` | Non-empty list of `ModelRow`. |
-| `weapons` | `WeaponProfile` catalog entries attachable to rows (may be shared references). |
+| `weapons` | `WeaponProfile` catalog entries attachable to rows (may be shared references); each entry **originates from list JSON** via ingestion. |
 
 ### `ModelRow`
 
@@ -76,7 +79,7 @@ Bounded contexts: **Game & Roster**, **Ingestion**, **Combat Resolution**.
 | `success` | Whether parse completed without blocking errors. |
 | `roster` | Partial or full `Roster` candidate (see `contracts/list-parser-plugin.md`). |
 | `diagnostics` | Errors/warnings with line hints. |
-| `formatId` | Strategy id (`gw-text-v1`, etc.). |
+| `formatId` | Strategy id (e.g. `bs-forces-json-v1` for MVP JSON roster shape aligned to `test-data/` examples). |
 
 **State transition**: `raw` → `parsed` → `userConfirmed` → merged into `Game`.
 
@@ -131,7 +134,7 @@ Bounded contexts: **Game & Roster**, **Ingestion**, **Combat Resolution**.
 
 ## Validation rules (cross-cutting)
 
-- List paste: reject with diagnostics if zero units parsed.
+- List import (JSON): reject with diagnostics if JSON invalid or zero units parsed; reference paths/keys in errors when useful.
 - Attack: block if weapon illegal for phase or model row.
 - Modifiers: reject conflicting pair per engine rules table (see tests).
 - Dice: cap per roll configurable constant to avoid UI freeze (soft warn, hard cap TBD in tasks).

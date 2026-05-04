@@ -32,9 +32,10 @@
 ## Validation Notes (2026-05-04)
 
 - Spec uses generic “automated unit tests” and “automated end-to-end tests” in acceptance mapping to satisfy the constitution’s test gates without naming specific frameworks in requirements.
-- Best Coast Pairings behavior is bounded by “when integration is enabled” and explicit fallback to manual paste.
+- Best Coast Pairings behavior is bounded by “when integration is enabled” and explicit fallback to **manual JSON list import**.
 - Cross-session identical-model count persistence is explicitly deferred inside User Story 5 to match stakeholder phrasing (“remains till later”).
 - **Update (same day)**: FR-017/FR-018 and SC-006 add **mobile layout** and **PWA installability**; FR-018 names PWA/manifest/service worker intentionally as stakeholder-requested acceptance criteria. Implementation choices live in `plan.md` / `research.md`.
+- **Update (2026-05-04)**: US2 / FR-003 / FR-004 / `research.md` §4 align on **JSON roster import**; **weapons and model profiles** come from imported list JSON. Golden examples: `auto-dice/test-data/example-votann-list.json`, `auto-dice/test-data/example-tzeentch-list.json` (referenced across `plan.md`, `data-model.md`, `contracts/list-parser-plugin.md`, `tasks.md`, `quickstart.md`).
 
 ## Notes
 

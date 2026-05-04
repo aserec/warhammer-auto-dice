@@ -3,7 +3,7 @@
 **Feature Branch**: `001-40k-auto-dice`  
 **Created**: 2026-05-04  
 **Status**: Draft  
-**Input**: User description: "Build an application that allows users to automatically throw all dice in a Warhammer 40k game…" (game creation with two players and lists; manual list paste; Best Coast Pairings match preload; shooting vs melee; attacker, target, weapons; living models and identical-model counts; attack modifiers; full hit/wound/save/FNP resolution with clear, subtly animated results highlighting critical outcomes)."
+**Input**: User description: "Build an application that allows users to automatically throw all dice in a Warhammer 40k game…" (game creation with two players and lists; **manual JSON roster import** with weapons/profiles from list data; Best Coast Pairings match preload; shooting vs melee; attacker, target, weapons; living models and identical-model counts; attack modifiers; full hit/wound/save/FNP resolution with clear, subtly animated results highlighting critical outcomes)."
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -25,18 +25,18 @@ A player sets up a **game** between exactly **two players**, each with an **army
 
 ---
 
-### User Story 2 - Import army lists by pasting supported Warhammer 40,000 formats (Priority: P1)
+### User Story 2 - Import army lists using supported Warhammer 40,000 formats (Priority: P1)
 
-A user pastes list text in one or more **supported official or common community export formats** for Warhammer 40,000. The application parses enough structure to identify **units**, **models**, **weapons**, and **profiles** needed for attacks and saves.
+A user supplies a list in one or more **supported formats** for Warhammer 40,000. For the first delivery, the **primary format is a JSON roster document** (the same class of file as the project’s golden examples under `auto-dice/test-data/`). The application parses enough structure to identify **units**, **models**, **weapons**, and **profiles** needed for attacks and saves. **Weapon characteristics and model profiles used later in attack configuration and dice resolution are loaded from this imported list data**, not entered separately in the app.
 
-**Why this priority**: Manual paste is the default path when no tournament integration is used.
+**Why this priority**: Manual import without tournament integration is the default path; JSON matches real export tooling and supports reliable golden tests.
 
-**Independent Test**: Paste sample lists of each supported format and confirm units and weapons appear in a structured review screen before committing to the game.
+**Independent Test**: Import sample JSON lists (including the repository’s golden files) and confirm units and weapons appear in a structured review screen before committing to the game.
 
 **Acceptance Scenarios**:
 
-1. **Given** a supported paste format, **When** the user pastes and confirms import, **Then** the list is structured into units with selectable weapons and model groups.
-2. **Given** malformed or unrecognized text, **When** the user attempts import, **Then** the user sees a clear error with guidance (line or section hints when possible) without corrupting an existing list.
+1. **Given** a supported import format (MVP: JSON roster), **When** the user supplies a valid document and confirms import, **Then** the list is structured into units with selectable weapons and model groups derived from that document.
+2. **Given** malformed or unrecognized input, **When** the user attempts import, **Then** the user sees a clear error with guidance (JSON path, line, or section hints when possible) without corrupting an existing list.
 3. **Given** parser behavior is defined, **When** tests run, **Then** representative golden samples for each supported format pass parsing expectations.
 
 **Acceptance (test mapping)**: Parsing and validation are covered by automated unit tests with fixture files; a primary import path is covered by an automated end-to-end test.
@@ -45,16 +45,16 @@ A user pastes list text in one or more **supported official or common community 
 
 ### User Story 3 - Preload lists from a Best Coast Pairings event match (Priority: P2)
 
-A user creates a game by referencing an **event** and a **specific paired match** in Best Coast Pairings so both army lists load without manual paste.
+A user creates a game by referencing an **event** and a **specific paired match** in Best Coast Pairings so both army lists load without manual file or paste import.
 
-**Why this priority**: High value for tournament players but depends on an external system and user authorization; it can ship after paste-based MVP if needed.
+**Why this priority**: High value for tournament players but depends on an external system and user authorization; it can ship after JSON-import MVP if needed.
 
-**Independent Test**: With a test double or sandbox credentials, select an event and match; verify both lists populate and are editable like pasted lists.
+**Independent Test**: With a test double or sandbox credentials, select an event and match; verify both lists populate and are editable like **manually imported** lists.
 
 **Acceptance Scenarios**:
 
 1. **Given** the user provides valid event and match identifiers the application understands, **When** they confirm preload, **Then** both players receive the correct lists from that pairing.
-2. **Given** the pairing service is unavailable or returns an error, **When** preload is attempted, **Then** the user sees a recoverable error and can fall back to manual paste.
+2. **Given** the pairing service is unavailable or returns an error, **When** preload is attempted, **Then** the user sees a recoverable error and can fall back to manual list import (MVP: JSON roster).
 3. **Given** integration contracts, **When** automated tests run, **Then** success and common failure responses from the pairing source are exercised without manual steps.
 
 **Acceptance (test mapping)**: Integration boundaries are covered by contract or integration-style automated tests; the happy-path selection UI is covered by an automated end-to-end test when a test environment is available.
@@ -137,14 +137,14 @@ The user executes a roll. The application presents **individual dice results** a
 
 ### Edge Cases
 
-- One or both lists fail import mid–game creation; user can correct paste or cancel without partial corrupt games.
+- One or both lists fail import mid–game creation; user can correct the import (e.g. fix JSON) or cancel without partial corrupt games.
 - Units lose all models mid-sequence; attack configuration invalidates with a clear message.
 - Weapons with variable attacks or damage: user supplies or confirms attack count and damage characteristics according to product rules for supported profiles.
 - Saves that are impossible or automatic (for example no save allowed): pipeline skips or labels the stage appropriately.
 - User applies modifiers that require player choice mid-resolution (if any): product either disallows unsupported choices with explanation or walks a minimal decision flow—only behaviors explicitly in scope per assumptions below.
 - Very large dice pools: results remain readable (grouping, pagination, or expand/collapse) without changing underlying random outcomes.
 - Accessibility: users who disable motion still receive the same numeric and textual information.
-- Mobile: on-screen keyboard or safe areas (notches, home indicators) MUST NOT permanently obscure primary actions; layouts adapt or scroll so users can complete paste, configure, and roll.
+- Mobile: on-screen keyboard or safe areas (notches, home indicators) MUST NOT permanently obscure primary actions; layouts adapt or scroll so users can complete **list import**, configure, and roll.
 
 ## Requirements *(mandatory)*
 
@@ -152,10 +152,10 @@ The user executes a roll. The application presents **individual dice results** a
 
 - **FR-001**: The system MUST allow creation of a two-player game associated with two army lists before dice resolution begins.
 - **FR-002**: The system MUST support local-only game setup for the initial release (no requirement that two human players join from separate devices).
-- **FR-003**: Users MUST be able to import an army list by pasting text in each supported Warhammer 40,000 list format advertised by the product.
-- **FR-004**: The system MUST parse imported lists into units, weapons, and model groupings sufficient to configure attacks and saving throws.
+- **FR-003**: Users MUST be able to import an army list for each supported Warhammer 40,000 list format advertised by the product; the **MVP includes JSON roster documents**, and **model profiles and weapons used in combat MUST come from the imported list data** (not a separate hand-maintained profile store for those fields).
+- **FR-004**: The system MUST parse imported lists into units, weapons, and model groupings sufficient to configure attacks and saving throws, preserving enough **profile and weapon statistics from the source document** to resolve dice without duplicate manual entry.
 - **FR-005**: Users MUST be able to create a game by selecting a Best Coast Pairings event and match, when that integration is enabled for their environment, and preload both lists from the pairing.
-- **FR-006**: When Best Coast Pairings data cannot be retrieved, the system MUST surface a clear error and allow the user to continue with manual list entry.
+- **FR-006**: When Best Coast Pairings data cannot be retrieved, the system MUST surface a clear error and allow the user to continue with **manual list import** (MVP: the same **JSON roster** path as in FR-003).
 - **FR-007**: Users MUST declare whether an attack sequence is shooting or melee before rolling.
 - **FR-008**: Users MUST select attacking unit, defending unit, and weapon (and required weapon options) from list-derived choices; illegal combinations MUST be prevented with explanations.
 - **FR-009**: Users MUST be able to adjust defending and attacking model availability using distinct rows for non-identical models and a numeric counter with increment and decrement for identical model stacks.
@@ -173,7 +173,7 @@ The user executes a roll. The application presents **individual dice results** a
 
 - **Game**: Two players, references to two army lists, session state, and history of resolutions in the session.
 - **Player**: Display name or identifier within a game.
-- **Army list**: Structured data derived from paste or Best Coast Pairings preload, versioned by import time and source.
+- **Army list**: Structured data derived from **imported list JSON** (MVP), optional plain-text paste in future formats, or Best Coast Pairings preload, versioned by import time and source.
 - **Unit**: Organizational container with models and optional transport relationships as present in list data.
 - **Model row**: Either a stack of identical models (count) or an individual distinct model configuration.
 - **Weapon profile**: Stats and abilities required for hit, wound, damage, and armor penetration calculations within supported scope.
@@ -185,7 +185,7 @@ The user executes a roll. The application presents **individual dice results** a
 
 ### Measurable Outcomes
 
-- **SC-001**: A new user can create a two-player game with pasted lists and reach a successful first roll in under ten minutes when using provided sample lists.
+- **SC-001**: A new user can create a two-player game with **imported JSON lists** and reach a successful first roll in under ten minutes when using provided sample lists (including repository golden files).
 - **SC-002**: At least ninety percent of dice outcomes in automated regression suites match independently calculated expected distributions or exact expected results for seeded scenarios.
 - **SC-003**: Ninety-five percent of moderated usability tasks (configure attack → roll → read final damage) are completed without moderator intervention using only in-app guidance.
 - **SC-004**: For attacks up to sixty individual dice across all stages, results remain readable without horizontal scrolling on a standard laptop viewport (content may use vertical expansion or disclosure patterns).
@@ -198,5 +198,6 @@ The user executes a roll. The application presents **individual dice results** a
 - **Single active user**: Initial games are controlled by one user on one device; competitive integrity features for two-device verification are future scope.
 - **Best Coast Pairings**: Access depends on user credentials or public data availability as determined during planning; the specification does not mandate a specific commercial relationship beyond what users already have for normal BCP use.
 - **Randomness**: Dice use cryptographically suitable or industry-standard consumer random generation; test environments can inject seeds for repeatability.
+- **Golden list JSON**: Development and automated tests use representative roster files checked in at `auto-dice/test-data/example-votann-list.json` and `auto-dice/test-data/example-tzeentch-list.json` as the baseline shape for ingestion and domain mapping.
 - **Session persistence**: Game and list data persist for at least the duration of the browser or app session; long-term cloud sync is future scope unless added later.
 - **Identical model memory**: Cross-session persistence of identical-model counts is explicitly deferred as noted in User Story 5.
