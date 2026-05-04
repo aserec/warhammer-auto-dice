@@ -1,0 +1,55 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# Build / Next.js
+.next/
+out/
+build/
+dist/
+.turbo/
+.swc/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Local env files (see https://nextjs.org/docs/app/building-your-application/configuring/environment-variables)
+.env*.local
+
+# Vercel
+.vercel
+
+# Debug & logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# OS & secrets dropped in repo root
+.DS_Store
+Thumbs.db
+*.pem
+
+# TypeScript
+*.tsbuildinfo
+
+# ESLint (flat config cache)
+.eslintcache
+
+# Optional: local IDE (uncomment if you do not commit workspace settings)
+# .vscode/
+# .idea/
+
+# AI / assistant local caches (keep committed rules under `.cursor/rules` etc.)
+.cursor/debug.log
+.cursor/cache/
+.aider*
+**/.claude/cache/
+**/.claude/**/local*.json
