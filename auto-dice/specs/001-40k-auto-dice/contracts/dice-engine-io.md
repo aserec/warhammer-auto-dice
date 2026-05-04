@@ -13,7 +13,7 @@ Define the **input/output contract** for pure combat resolution in `packages/dom
 | Property | Required | Description |
 |----------|------------|-------------|
 | `rulesProfileId` | yes | e.g. `wh40k-10e-v1`. |
-| `attackConfiguration` | yes | Immutable snapshot: phase, units, weapon, attack count, participating model rows, defender save + FNP. Weapon and model stats MUST already be **materialized from the local rules catalog** (Wahapedia-backed); the engine does not call Wahapedia. |
+| `attackConfiguration` | yes | Immutable snapshot: phase, units, weapon, attack count, participating model rows, defender save + FNP. |
 | `modifiers` | yes | Ordered list of normalized modifier descriptors (`kind`, optional `value`, `scope`). |
 | `rng` | yes | `RngPort` implementation (seeded in tests). |
 

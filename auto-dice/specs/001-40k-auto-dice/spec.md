@@ -3,7 +3,7 @@
 **Feature Branch**: `001-40k-auto-dice`  
 **Created**: 2026-05-04  
 **Status**: Draft  
-**Input**: User description: "Build an application that allows users to automatically throw all dice in a Warhammer 40k game…" (game creation with two players and lists; manual list paste; **Wahapedia-backed** model profiles and weapons loaded on list import and **persisted locally** for reuse; Best Coast Pairings match preload; shooting vs melee; attacker, target, weapons; living models and identical-model counts; attack modifiers; full hit/wound/save/FNP resolution with clear, subtly animated results highlighting critical outcomes)."
+**Input**: User description: "Build an application that allows users to automatically throw all dice in a Warhammer 40k game…" (game creation with two players and lists; manual list paste; Best Coast Pairings match preload; shooting vs melee; attacker, target, weapons; living models and identical-model counts; attack modifiers; full hit/wound/save/FNP resolution with clear, subtly animated results highlighting critical outcomes)."
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -27,27 +27,25 @@ A player sets up a **game** between exactly **two players**, each with an **army
 
 ### User Story 2 - Import army lists by pasting supported Warhammer 40,000 formats (Priority: P1)
 
-A user pastes list text in one or more **supported official or common community export formats** for Warhammer 40,000. The application parses enough structure to identify **units**, **models**, and **references** to weapons and model profiles. **Full weapon statistics and model profiles are loaded from Wahapedia** (via the application’s server-side adapter) **on list load**: every profile and weapon required by the parsed roster MUST be **fetched, normalized, and persisted** in a **local persistent database** (**IndexedDB** rules catalog on the device) before the roster is considered ready for attack configuration. Cached rules are **reused for all later games** in the **same browser installation** (same origin) so repeat play benefits from prior imports.
+A user pastes list text in one or more **supported official or common community export formats** for Warhammer 40,000. The application parses enough structure to identify **units**, **models**, **weapons**, and **profiles** needed for attacks and saves.
 
-**Why this priority**: Manual paste is the default path when no tournament integration is used; trustworthy dice resolution requires authoritative stats, not guesswork from list text alone.
+**Why this priority**: Manual paste is the default path when no tournament integration is used.
 
-**Independent Test**: Paste sample lists of each supported format and confirm units and weapons appear in a structured review screen **and** that the rules catalog contains persisted Wahapedia-backed entries for every referenced profile and weapon before committing to the game.
+**Independent Test**: Paste sample lists of each supported format and confirm units and weapons appear in a structured review screen before committing to the game.
 
 **Acceptance Scenarios**:
 
-1. **Given** a supported paste format, **When** the user pastes and confirms import, **Then** the list is structured into units with selectable weapons and model groups **and** all required Wahapedia entities for that roster are stored in the local rules catalog.
+1. **Given** a supported paste format, **When** the user pastes and confirms import, **Then** the list is structured into units with selectable weapons and model groups.
 2. **Given** malformed or unrecognized text, **When** the user attempts import, **Then** the user sees a clear error with guidance (line or section hints when possible) without corrupting an existing list.
 3. **Given** parser behavior is defined, **When** tests run, **Then** representative golden samples for each supported format pass parsing expectations.
-4. **Given** a roster whose entities were previously hydrated on this device, **When** the user imports a list that references the same Wahapedia keys, **Then** the application reuses cached catalog rows without unnecessary refetch when still valid.
-5. **Given** Wahapedia or the adapter is unavailable for a required key, **When** hydration runs, **Then** the user sees a blocking error with recovery guidance and the roster is not committed as ready-to-play until resolved or the user cancels.
 
-**Acceptance (test mapping)**: Parsing, hydration mapping, and catalog persistence are covered by automated unit tests with fixture files and mocked Wahapedia responses; a primary import path is covered by an automated end-to-end test including a “rules ready” gate.
+**Acceptance (test mapping)**: Parsing and validation are covered by automated unit tests with fixture files; a primary import path is covered by an automated end-to-end test.
 
 ---
 
 ### User Story 3 - Preload lists from a Best Coast Pairings event match (Priority: P2)
 
-A user creates a game by referencing an **event** and a **specific paired match** in Best Coast Pairings so both army lists load without manual paste. Loaded lists MUST go through the same **Wahapedia hydration and rules-catalog persistence** requirements as pasted lists (User Story 2).
+A user creates a game by referencing an **event** and a **specific paired match** in Best Coast Pairings so both army lists load without manual paste.
 
 **Why this priority**: High value for tournament players but depends on an external system and user authorization; it can ship after paste-based MVP if needed.
 
@@ -65,7 +63,7 @@ A user creates a game by referencing an **event** and a **specific paired match*
 
 ### User Story 4 - Configure shooting or melee and assign attackers, weapons, and targets (Priority: P1)
 
-Inside an active game, the user chooses whether the attack is **shooting** or **melee**, selects the **attacking unit**, **defending unit**, and **weapon profile** (and relevant weapon options when a unit has several). The application uses **Wahapedia-backed, locally cached** weapon and model profile stats (see User Story 2) for characteristics required to resolve dice.
+Inside an active game, the user chooses whether the attack is **shooting** or **melee**, selects the **attacking unit**, **defending unit**, and **weapon profile** (and relevant weapon options when a unit has several). The application uses list-derived stats for characteristics required to resolve dice.
 
 **Why this priority**: Correct phase and weapon selection is required for meaningful automation.
 
@@ -140,7 +138,6 @@ The user executes a roll. The application presents **individual dice results** a
 ### Edge Cases
 
 - One or both lists fail import mid–game creation; user can correct paste or cancel without partial corrupt games.
-- Wahapedia hydration fails for one or more entities: user sees which models or weapons are missing; retry and cache invalidation paths are clear; game state is not left in a “ready to roll” state without complete catalog data.
 - Units lose all models mid-sequence; attack configuration invalidates with a clear message.
 - Weapons with variable attacks or damage: user supplies or confirms attack count and damage characteristics according to product rules for supported profiles.
 - Saves that are impossible or automatic (for example no save allowed): pipeline skips or labels the stage appropriately.
@@ -156,7 +153,7 @@ The user executes a roll. The application presents **individual dice results** a
 - **FR-001**: The system MUST allow creation of a two-player game associated with two army lists before dice resolution begins.
 - **FR-002**: The system MUST support local-only game setup for the initial release (no requirement that two human players join from separate devices).
 - **FR-003**: Users MUST be able to import an army list by pasting text in each supported Warhammer 40,000 list format advertised by the product.
-- **FR-004**: The system MUST parse imported lists into units, model groupings, and **stable references** to every weapon and model profile required to configure attacks and saving throws.
+- **FR-004**: The system MUST parse imported lists into units, weapons, and model groupings sufficient to configure attacks and saving throws.
 - **FR-005**: Users MUST be able to create a game by selecting a Best Coast Pairings event and match, when that integration is enabled for their environment, and preload both lists from the pairing.
 - **FR-006**: When Best Coast Pairings data cannot be retrieved, the system MUST surface a clear error and allow the user to continue with manual list entry.
 - **FR-007**: Users MUST declare whether an attack sequence is shooting or melee before rolling.
@@ -171,19 +168,15 @@ The user executes a roll. The application presents **individual dice results** a
 - **FR-016**: When motion is reduced at the platform or user preference level, the system MUST still present full numeric and textual outcomes.
 - **FR-017**: The system MUST provide a **mobile-friendly** layout for primary flows (game setup, list import, attack configuration, dice results) on typical phone screen sizes without relying on horizontal scrolling for essential controls.
 - **FR-018**: The system MUST be deliverable as a **Progressive Web App (PWA)** with a valid **Web App Manifest** and **service worker** such that users on supported mobile browsers can **install** the application to the device home screen and launch it in a standalone display mode where the platform supports it.
-- **FR-019**: On list load (before the roster is committed as ready for play), the system MUST **resolve every referenced model profile and weapon** against **Wahapedia** through the application’s **server-side adapter** and MUST **persist** the full normalized payloads needed for combat math in a **local persistent database** (IndexedDB rules catalog), not only in transient memory.
-- **FR-020**: The system MUST **reuse** rules-catalog entries for subsequent games and list imports on the **same browser installation** (same origin) when keys match and cache policy allows, so all users of that installation benefit from prior successful hydrations.
-- **FR-021**: If Wahapedia or the adapter cannot supply a required entity, the system MUST block “ready to play” for that roster, surface a clear error, and MUST NOT fabricate weapon or profile statistics from list text alone.
 
 ### Key Entities
 
 - **Game**: Two players, references to two army lists, session state, and history of resolutions in the session.
 - **Player**: Display name or identifier within a game.
-- **Army list**: Structured data derived from paste or Best Coast Pairings preload, versioned by import time and source; links into the **local rules catalog** for Wahapedia-backed stats.
-- **Rules catalog entry**: Locally persisted normalized payload (model profile and/or weapon profile) keyed by stable Wahapedia-derived keys, shared across games on the same origin.
+- **Army list**: Structured data derived from paste or Best Coast Pairings preload, versioned by import time and source.
 - **Unit**: Organizational container with models and optional transport relationships as present in list data.
 - **Model row**: Either a stack of identical models (count) or an individual distinct model configuration.
-- **Weapon profile**: Stats and abilities required for hit, wound, damage, and armor penetration calculations within supported scope; **sourced from Wahapedia** and stored in the **rules catalog** after list hydration.
+- **Weapon profile**: Stats and abilities required for hit, wound, damage, and armor penetration calculations within supported scope.
 - **Attack configuration**: Phase, attacker, defender, weapon, number of attacks, active model rows, and attached modifiers.
 - **Dice resolution**: Ordered stages (hit, wound, save, Feel No Pain), per-die outcomes, special flags, and final summary.
 - **Best Coast Pairings reference**: Event identifier, match identifier, and retrieved list payloads or error metadata.
@@ -207,4 +200,3 @@ The user executes a roll. The application presents **individual dice results** a
 - **Randomness**: Dice use cryptographically suitable or industry-standard consumer random generation; test environments can inject seeds for repeatability.
 - **Session persistence**: Game and list data persist for at least the duration of the browser or app session; long-term cloud sync is future scope unless added later.
 - **Identical model memory**: Cross-session persistence of identical-model counts is explicitly deferred as noted in User Story 5.
-- **Wahapedia**: Third-party rules reference site; the product uses it as the **authoritative source** for profile and weapon statistics. Fetching MUST respect applicable **terms of use**, **robots**, and **rate limits** (see `research.md` §12); implementation MUST use a **server-side proxy** (Next.js Route Handler), not direct browser scraping against Wahapedia where that would violate policy or CORS constraints.

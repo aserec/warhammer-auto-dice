@@ -20,7 +20,6 @@ Army list paste supports **multiple formats** over time; each format implements 
 |-------|------|--------|
 | `success` | boolean | `false` if blocking errors. |
 | `roster` | `Roster` draft | May be partial if warnings only. |
-| `requiredRulesEntityKeys` | `RulesEntityKey[]` | Deduped keys identifying **all** Wahapedia model profiles and weapons the roster needs; MUST be complete for a successful parse when `success` is `true` (see `wahapedia-rules-catalog.md`). |
 | `diagnostics` | array | `severity: error \| warn`, `message`, optional `line`, `column`. |
 
 ## Golden tests

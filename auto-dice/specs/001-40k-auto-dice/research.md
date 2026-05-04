@@ -36,9 +36,9 @@
 
 ## 5. Persistence (session scope)
 
-**Decision**: Serialize **Game aggregate** + **roster snapshots** + **attack history** to **IndexedDB** via a **`GameRepository` port** with in-memory implementation for tests. **Additionally**, maintain a **`RulesCatalogRepository`** in IndexedDB (separate store) for **Wahapedia-backed** model and weapon payloads shared across games (see §12).
+**Decision**: Serialize **Game aggregate** + **roster snapshots** + **attack history** to **IndexedDB** via a **`GameRepository` port** with in-memory implementation for tests.
 
-**Rationale**: Matches spec session persistence without cloud; swappable for API later; rules catalog avoids duplicating large payloads inside every `Game` snapshot.
+**Rationale**: Matches spec session persistence without cloud; swappable for API later.
 
 **Alternatives considered**: localStorage only (acceptable for small games; may hit size limits with full lists).
 
@@ -58,7 +58,7 @@
 
 ## 8. TanStack vs Zustand split
 
-**Decision**: **TanStack Query** for **BCP** fetches, **Wahapedia batch hydration**, and any future HTTP APIs; **Zustand** for active game UI (wizard step, selected units, transient modifier toggles) coexisting with serialized game state flushed through repository.
+**Decision**: **TanStack Query** for BCP fetches and any future HTTP APIs; **Zustand** for active game UI (wizard step, selected units, transient modifier toggles) coexisting with serialized game state flushed through repository.
 
 **Rationale**: Matches constitution guidance; clear separation server-async vs client session.
 
@@ -83,13 +83,3 @@
 **Alternatives considered**: Expo / React Native only (rejected for MVP: duplicates domain work); web-only without SW (rejected: no offline shell, weaker install story).
 
 **Offline expectations**: Re-open and roll against **already persisted** game data offline; first visit, BCP import, and deploy updates require network (update strategy: skipWaiting / user prompt per chosen PWA toolkit).
-
-## 12. Wahapedia profile and weapon hydration (authoritative stats)
-
-**Decision**: **Model profiles** and **weapon profiles** used in combat are **always** sourced from **Wahapedia** through a **Next.js Route Handler** (`apps/web/app/api/wahapedia/**`) that performs **server-side** HTTP fetches (or other sanctioned retrieval), normalizes responses into domain-compatible structures, and returns **batch JSON** to the client. The client writes results to a **dedicated IndexedDB object store** (`RulesCatalogRepository`, separate from `GameRepository`) keyed by stable **`RulesEntityKey`** values emitted during list parse / roster mapping (see `contracts/wahapedia-rules-catalog.md`). **Every** key required by a roster MUST be persisted **before** the roster is marked ready for play. **Cache reuse**: identical keys on the **same origin** skip network when a fresh-enough row exists (policy: ETag / `fetchedAt` TTL documented at implementation).
-
-**Rationale**: List exports alone are insufficient for trustworthy automation; Wahapedia is the community’s canonical structured reference for 10th Edition datasheets. Local IndexedDB is the best fit for a PWA: large JSON payloads, structured keys, shared across games, no server DB in v1. **“Everybody using the app”** on this stack means **all sessions on the same browser installation** share one rules catalog per origin (not a global cloud cache).
-
-**Legal / policy**: Implementation MUST comply with Wahapedia **terms of use** and **robots.txt**; prefer documented APIs or allowed scraping patterns. If direct integration is disallowed, the plan MUST switch to an **approved** alternate data source while keeping the same **port + contract** shape—do not couple domain logic to HTML selectors without an isolation layer.
-
-**Alternatives considered**: **Embed stats in list text only** (rejected: FR-021); **remote Postgres catalog** (deferred: adds hosting cost and privacy surface); **SQLite in WASM** (deferred: IndexedDB suffices).

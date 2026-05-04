@@ -6,7 +6,7 @@
 
 ## Content Quality
 
-- [ ] No implementation details (languages, frameworks, APIs) — **exception**: spec mandates **Wahapedia** + **IndexedDB** rules catalog (FR-019–FR-021) per explicit product direction; see Validation Notes.
+- [x] No implementation details (languages, frameworks, APIs)
 - [x] Focused on user value and business needs
 - [x] Written for non-technical stakeholders
 - [x] All mandatory sections completed
@@ -27,7 +27,7 @@
 - [x] All functional requirements have clear acceptance criteria
 - [x] User scenarios cover primary flows
 - [x] Feature meets measurable outcomes defined in Success Criteria
-- [ ] No implementation details leak into specification — same **Wahapedia / IndexedDB** exception as above.
+- [x] No implementation details leak into specification
 
 ## Validation Notes (2026-05-04)
 
@@ -35,7 +35,6 @@
 - Best Coast Pairings behavior is bounded by “when integration is enabled” and explicit fallback to manual paste.
 - Cross-session identical-model count persistence is explicitly deferred inside User Story 5 to match stakeholder phrasing (“remains till later”).
 - **Update (same day)**: FR-017/FR-018 and SC-006 add **mobile layout** and **PWA installability**; FR-018 names PWA/manifest/service worker intentionally as stakeholder-requested acceptance criteria. Implementation choices live in `plan.md` / `research.md`.
-- **Update**: FR-019–FR-021 and User Story 2 mandate **Wahapedia** as the source of weapon/model stats and **IndexedDB** for the shared rules catalog—explicit in the spec by stakeholder request; legal/proxy details are in `research.md` §12.
 
 ## Notes
 
