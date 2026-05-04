@@ -34,6 +34,7 @@
 - Spec uses generic “automated unit tests” and “automated end-to-end tests” in acceptance mapping to satisfy the constitution’s test gates without naming specific frameworks in requirements.
 - Best Coast Pairings behavior is bounded by “when integration is enabled” and explicit fallback to manual paste.
 - Cross-session identical-model count persistence is explicitly deferred inside User Story 5 to match stakeholder phrasing (“remains till later”).
+- **Update (same day)**: FR-017/FR-018 and SC-006 add **mobile layout** and **PWA installability**; FR-018 names PWA/manifest/service worker intentionally as stakeholder-requested acceptance criteria. Implementation choices live in `plan.md` / `research.md`.
 
 ## Notes
 

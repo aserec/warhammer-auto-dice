@@ -144,6 +144,7 @@ The user executes a roll. The application presents **individual dice results** a
 - User applies modifiers that require player choice mid-resolution (if any): product either disallows unsupported choices with explanation or walks a minimal decision flow—only behaviors explicitly in scope per assumptions below.
 - Very large dice pools: results remain readable (grouping, pagination, or expand/collapse) without changing underlying random outcomes.
 - Accessibility: users who disable motion still receive the same numeric and textual information.
+- Mobile: on-screen keyboard or safe areas (notches, home indicators) MUST NOT permanently obscure primary actions; layouts adapt or scroll so users can complete paste, configure, and roll.
 
 ## Requirements *(mandatory)*
 
@@ -165,6 +166,8 @@ The user executes a roll. The application presents **individual dice results** a
 - **FR-014**: Results MUST include per-die detail and aggregated summaries per stage, ending with unambiguous final combat outcome information (for example damage suffered or attacks negated), consistent with the supported rules scope.
 - **FR-015**: The system MUST visually emphasize rules-significant outcomes in a subtle, consistent manner and MUST provide short, non-blocking motion for users who keep motion enabled.
 - **FR-016**: When motion is reduced at the platform or user preference level, the system MUST still present full numeric and textual outcomes.
+- **FR-017**: The system MUST provide a **mobile-friendly** layout for primary flows (game setup, list import, attack configuration, dice results) on typical phone screen sizes without relying on horizontal scrolling for essential controls.
+- **FR-018**: The system MUST be deliverable as a **Progressive Web App (PWA)** with a valid **Web App Manifest** and **service worker** such that users on supported mobile browsers can **install** the application to the device home screen and launch it in a standalone display mode where the platform supports it.
 
 ### Key Entities
 
@@ -187,6 +190,7 @@ The user executes a roll. The application presents **individual dice results** a
 - **SC-003**: Ninety-five percent of moderated usability tasks (configure attack → roll → read final damage) are completed without moderator intervention using only in-app guidance.
 - **SC-004**: For attacks up to sixty individual dice across all stages, results remain readable without horizontal scrolling on a standard laptop viewport (content may use vertical expansion or disclosure patterns).
 - **SC-005**: When Best Coast Pairings preload succeeds in a configured test environment, list population for both players completes in under thirty seconds ninety-five percent of the time.
+- **SC-006**: On a **390 px** wide logical viewport, users complete the path from opening an existing game through one full attack roll and reading the final summary **without horizontal scrolling** for required controls, and primary tap targets meet platform-typical minimum size guidelines (approximately **44 × 44 px** or equivalent).
 
 ## Assumptions
 
