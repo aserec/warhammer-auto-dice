@@ -31,7 +31,19 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+Verify against `.specify/memory/constitution.md` (Warhammer Auto Dice Constitution):
+
+- **TDD**: Plan includes failing-test-first steps (Vitest) for new logic; no story closed without unit
+  or component tests where applicable.
+- **Playwright**: E2E scenarios identified for user-visible changes; execution path uses Playwright
+  MCP after the feature lands.
+- **Design review**: `pre-commit-design-review` skill run on the feature diff without asking the
+  user to approve the review step itself.
+- **UX**: Tailwind + shadcn/ui reuse; Storybook for non-trivial components; accessibility called out.
+- **Performance**: Concrete targets and Vercel React / Next.js practices referenced (TanStack,
+  Zustand per constitution).
+- **Stack**: TypeScript, Next.js, Turborepo, listed libraries only unless an explicit pin with owner
+  and expiry is documented.
 
 ## Project Structure
 

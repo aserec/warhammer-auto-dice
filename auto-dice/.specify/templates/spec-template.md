@@ -8,6 +8,13 @@
 ## User Scenarios & Testing *(mandatory)*
 
 <!--
+  CONSTITUTION (`.specify/memory/constitution.md`): TDD is non-negotiable. Each user story MUST
+  include acceptance criteria that map to Vitest (logic/components) and, where the UI or critical
+  flows are touched, Playwright E2E scenarios. Plans and tasks MUST allocate test work before
+  implementation is considered complete.
+-->
+
+<!--
   IMPORTANT: User stories should be PRIORITIZED as user journeys ordered by importance.
   Each user story/journey must be INDEPENDENTLY TESTABLE - meaning if you implement just ONE of them,
   you should still have a viable MVP (Minimum Viable Product) that delivers value.
