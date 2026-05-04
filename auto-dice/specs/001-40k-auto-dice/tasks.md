@@ -79,6 +79,7 @@
 
 **Checkpoint**: US1 works alone (game CRUD shell).
 
+- [ ] T031 [US1] Run `.cursor/skills/custom/pre-commit-design-review/SKILL.md` on the feature diff vs `HEAD` after this story's substantive UI batch per constitution (scope: `apps/web/app/games/**`, `apps/web/lib/game/**`)
 ---
 
 ## Phase 4: User Story 2 — Import army lists by pasting (Priority: P1)
@@ -89,20 +90,21 @@
 
 ### Tests for User Story 2 (required per constitution) ⚠️
 
-- [ ] T031 [P] [US2] Add golden fixture text files under `packages/domain/src/ingestion/__fixtures__/*.txt` and Vitest `packages/domain/src/ingestion/default-format-parser.test.ts`
-- [ ] T032 [P] [US2] Playwright `apps/web/e2e/us2-paste-import.spec.ts` pastes fixture, asserts review table visible
+- [ ] T032 [P] [US2] Add golden fixture text files under `packages/domain/src/ingestion/__fixtures__/*.txt` and Vitest `packages/domain/src/ingestion/default-format-parser.test.ts`
+- [ ] T033 [P] [US2] Playwright `apps/web/e2e/us2-paste-import.spec.ts` pastes fixture, asserts review table visible
 
 ### Implementation for User Story 2
 
-- [ ] T033 [US2] Define parser plugin types per [contracts/list-parser-plugin.md](./contracts/list-parser-plugin.md) in `packages/domain/src/ingestion/list-parse-result.ts` and `packages/domain/src/ingestion/list-parser-plugin.ts`
-- [ ] T034 [US2] Implement first parser strategy in `packages/domain/src/ingestion/strategies/default-list-parser.ts` (MVP single format from [research.md](./research.md) §4)
-- [ ] T035 [US2] Map parse output to `Roster` / `Unit` / `WeaponProfile` shapes in `packages/domain/src/ingestion/map-to-roster.ts`
-- [ ] T036 [US2] Add `apps/web/components/roster/paste-import-dialog.tsx` using shadcn `Dialog`, `Textarea`, and error list from diagnostics
-- [ ] T037 [US2] Add `apps/web/components/roster/list-review-table.tsx` for confirming parsed units before attach
-- [ ] T038 [US2] Integrate attach flow into `apps/web/app/games/[gameId]/page.tsx` (or `apps/web/app/games/[gameId]/lists/page.tsx`) updating `Game` via store + repository
+- [ ] T034 [US2] Define parser plugin types per [contracts/list-parser-plugin.md](./contracts/list-parser-plugin.md) in `packages/domain/src/ingestion/list-parse-result.ts` and `packages/domain/src/ingestion/list-parser-plugin.ts`
+- [ ] T035 [US2] Implement first parser strategy in `packages/domain/src/ingestion/strategies/default-list-parser.ts` (MVP single format from [research.md](./research.md) §4)
+- [ ] T036 [US2] Map parse output to `Roster` / `Unit` / `WeaponProfile` shapes in `packages/domain/src/ingestion/map-to-roster.ts`
+- [ ] T037 [US2] Add `apps/web/components/roster/paste-import-dialog.tsx` using shadcn `Dialog`, `Textarea`, and error list from diagnostics
+- [ ] T038 [US2] Add `apps/web/components/roster/list-review-table.tsx` for confirming parsed units before attach
+- [ ] T039 [US2] Integrate attach flow into `apps/web/app/games/[gameId]/page.tsx` (or `apps/web/app/games/[gameId]/lists/page.tsx`) updating `Game` via store + repository
 
 **Checkpoint**: US1+US2 — game with imported lists.
 
+- [ ] T040 [US2] Run `.cursor/skills/custom/pre-commit-design-review/SKILL.md` on the feature diff vs `HEAD` after this story's substantive UI batch per constitution (scope: `apps/web/components/roster/**`, `apps/web/app/games/**`)
 ---
 
 ## Phase 5: User Story 4 — Shooting/melee and attack assignment (Priority: P1)
@@ -113,20 +115,21 @@
 
 ### Tests for User Story 4 (required per constitution) ⚠️
 
-- [ ] T039 [P] [US4] Vitest `packages/domain/src/combat/attack-configuration.test.ts` for legal/illegal combinations
-- [ ] T040 [P] [US4] Playwright `apps/web/e2e/us4-attack-wizard.spec.ts` selects shooting, units, weapon; sees summary
+- [ ] T041 [P] [US4] Vitest `packages/domain/src/combat/attack-configuration.test.ts` for legal/illegal combinations
+- [ ] T042 [P] [US4] Playwright `apps/web/e2e/us4-attack-wizard.spec.ts` selects shooting, units, weapon; sees summary
 
 ### Implementation for User Story 4
 
-- [ ] T041 [US4] Implement `AttackConfiguration` VO + validators in `packages/domain/src/combat/attack-configuration.ts`
-- [ ] T042 [US4] Add `apps/web/lib/stores/attack-wizard-store.ts` holding wizard draft synced to URL or game slice
-- [ ] T043 [US4] Add `apps/web/components/combat/attack-phase-toggle.tsx` (shooting vs melee) with accessible labels
-- [ ] T044 [P] [US4] Add `apps/web/components/combat/unit-picker.tsx` and `apps/web/components/combat/weapon-picker.tsx` reading from roster props
-- [ ] T045 [US4] Add `apps/web/components/combat/attack-summary-card.tsx` showing BS/S/A/D/AP/save context from selections
-- [ ] T046 [US4] Add route surface `apps/web/app/games/[gameId]/attack/page.tsx` composing the wizard
+- [ ] T043 [US4] Implement `AttackConfiguration` VO + validators in `packages/domain/src/combat/attack-configuration.ts`
+- [ ] T044 [US4] Add `apps/web/lib/stores/attack-wizard-store.ts` holding wizard draft synced to URL or game slice
+- [ ] T045 [US4] Add `apps/web/components/combat/attack-phase-toggle.tsx` (shooting vs melee) with accessible labels
+- [ ] T046 [P] [US4] Add `apps/web/components/combat/unit-picker.tsx` and `apps/web/components/combat/weapon-picker.tsx` reading from roster props
+- [ ] T047 [US4] Add `apps/web/components/combat/attack-summary-card.tsx` showing BS/S/A/D/AP/save context from selections
+- [ ] T048 [US4] Add route surface `apps/web/app/games/[gameId]/attack/page.tsx` composing the wizard
 
 **Checkpoint**: Attack configuration UI + domain validation without rolling yet.
 
+- [ ] T049 [US4] Run `.cursor/skills/custom/pre-commit-design-review/SKILL.md` on the feature diff vs `HEAD` after this story's substantive UI batch per constitution (scope: `apps/web/components/combat/**`, `apps/web/app/games/**/attack/**`)
 ---
 
 ## Phase 6: User Story 6 — Attack modifiers (Priority: P1)
@@ -137,18 +140,19 @@
 
 ### Tests for User Story 6 (required per constitution) ⚠️
 
-- [ ] T047 [P] [US6] Vitest table specs in `packages/domain/src/combat/modifiers/modifier-engine.test.ts` covering ordering and conflicts
-- [ ] T048 [P] [US6] Playwright assertion in `apps/web/e2e/us6-modifiers.spec.ts` toggling modifiers changes preview copy in `apps/web/components/combat/attack-summary-card.tsx`
+- [ ] T050 [P] [US6] Vitest table specs in `packages/domain/src/combat/modifiers/modifier-engine.test.ts` covering ordering and conflicts
+- [ ] T051 [P] [US6] Playwright assertion in `apps/web/e2e/us6-modifiers.spec.ts` toggling modifiers changes preview copy in `apps/web/components/combat/attack-summary-card.tsx`
 
 ### Implementation for User Story 6
 
-- [ ] T049 [US6] Define modifier descriptors in `packages/domain/src/combat/modifiers/modifier-types.ts`
-- [ ] T050 [US6] Implement ordering + application rules in `packages/domain/src/combat/modifiers/modifier-engine.ts` (document order in `packages/domain/src/combat/modifiers/README.md`)
-- [ ] T051 [US6] Add `apps/web/components/combat/modifier-bar.tsx` with toggles bound to `attack-wizard-store.ts`
-- [ ] T052 [US6] Extend `AttackConfiguration` builder in `packages/domain/src/combat/attack-configuration.ts` to embed normalized `Modifier[]`
+- [ ] T052 [US6] Define modifier descriptors in `packages/domain/src/combat/modifiers/modifier-types.ts`
+- [ ] T053 [US6] Implement ordering + application rules in `packages/domain/src/combat/modifiers/modifier-engine.ts` (document order in `packages/domain/src/combat/modifiers/README.md`)
+- [ ] T054 [US6] Add `apps/web/components/combat/modifier-bar.tsx` with toggles bound to `attack-wizard-store.ts`
+- [ ] T055 [US6] Extend `AttackConfiguration` builder in `packages/domain/src/combat/attack-configuration.ts` to embed normalized `Modifier[]`
 
 **Checkpoint**: Modifiers feed into configuration object used by resolver (next phase).
 
+- [ ] T056 [US6] Run `.cursor/skills/custom/pre-commit-design-review/SKILL.md` on the feature diff vs `HEAD` after this story's substantive UI batch per constitution (scope: `apps/web/components/combat/**`)
 ---
 
 ## Phase 7: User Story 7 — Roll and review dice (Priority: P1)
@@ -159,21 +163,22 @@
 
 ### Tests for User Story 7 (required per constitution) ⚠️
 
-- [ ] T053 [P] [US7] Vitest golden tests in `packages/domain/src/combat/dice/resolve-attack.test.ts` per [contracts/dice-engine-io.md](./contracts/dice-engine-io.md)
-- [ ] T054 [P] [US7] Playwright `apps/web/e2e/us7-roll-desktop.spec.ts` full roll assertions
-- [ ] T055 [P] [US7] Playwright `apps/web/e2e/us7-roll-mobile.spec.ts` same flow on `390x844` project from `apps/web/playwright.config.ts`
+- [ ] T057 [P] [US7] Vitest golden tests in `packages/domain/src/combat/dice/resolve-attack.test.ts` per [contracts/dice-engine-io.md](./contracts/dice-engine-io.md)
+- [ ] T058 [P] [US7] Playwright `apps/web/e2e/us7-roll-desktop.spec.ts` full roll assertions
+- [ ] T059 [P] [US7] Playwright `apps/web/e2e/us7-roll-mobile.spec.ts` same flow on `390x844` project from `apps/web/playwright.config.ts`
 
 ### Implementation for User Story 7
 
-- [ ] T056 [US7] Implement `resolveAttack` entry in `packages/domain/src/combat/dice/resolve-attack.ts` orchestrating hit/wound/save/fnp stages
-- [ ] T057 [P] [US7] Implement stage modules under `packages/domain/src/combat/dice/stages/hits.ts`, `wounds.ts`, `saves.ts`, `fnp.ts` as needed to keep files small
-- [ ] T058 [US7] Add `apps/web/components/combat/dice-stage-breakdown.tsx` for per-stage dice lists with subtle highlight tokens
-- [ ] T059 [US7] Add `apps/web/hooks/use-prefers-reduced-motion.ts` and gate animations in `apps/web/components/combat/dice-stage-breakdown.tsx`
-- [ ] T060 [US7] Add `apps/web/components/combat/roll-button.tsx` calling domain resolver with injected `SeededRng` in tests and `BrowserRng` in app from `apps/web/lib/rng/browser-rng.ts`
-- [ ] T061 [US7] Persist last `DiceResolution` into game history via `packages/domain/src/game/resolution-history.ts` and `indexeddb-game-repository.ts`
+- [ ] T060 [US7] Implement `resolveAttack` entry in `packages/domain/src/combat/dice/resolve-attack.ts` orchestrating hit/wound/save/fnp stages
+- [ ] T061 [P] [US7] Implement stage modules under `packages/domain/src/combat/dice/stages/hits.ts`, `wounds.ts`, `saves.ts`, `fnp.ts` as needed to keep files small
+- [ ] T062 [US7] Add `apps/web/components/combat/dice-stage-breakdown.tsx` for per-stage dice lists with subtle highlight tokens
+- [ ] T063 [US7] Add `apps/web/hooks/use-prefers-reduced-motion.ts` and gate animations in `apps/web/components/combat/dice-stage-breakdown.tsx`
+- [ ] T064 [US7] Add `apps/web/components/combat/roll-button.tsx` calling domain resolver with injected `SeededRng` in tests and `BrowserRng` in app from `apps/web/lib/rng/browser-rng.ts`
+- [ ] T065 [US7] Persist last `DiceResolution` into game history via `packages/domain/src/game/resolution-history.ts` and `indexeddb-game-repository.ts`
 
 **Checkpoint**: Vertical slice **create → paste → configure → modify → roll** works (core MVP).
 
+- [ ] T066 [US7] Run `.cursor/skills/custom/pre-commit-design-review/SKILL.md` on the feature diff vs `HEAD` after this story's substantive UI batch per constitution (scope: `apps/web/components/combat/**`, `apps/web/hooks/**`)
 ---
 
 ## Phase 8: User Story 5 — Model rows and identical-model stacks (Priority: P2)
@@ -184,18 +189,19 @@
 
 ### Tests for User Story 5 (required per constitution) ⚠️
 
-- [ ] T062 [P] [US5] Vitest `packages/domain/src/game/model-rows.test.ts` for stack/individual invariants
-- [ ] T063 [P] [US5] Playwright `apps/web/e2e/us5-model-stacks.spec.ts` changes `ModelStackControl` count and observes picker change in `apps/web/components/combat/weapon-picker.tsx`
+- [ ] T067 [P] [US5] Vitest `packages/domain/src/game/model-rows.test.ts` for stack/individual invariants
+- [ ] T068 [P] [US5] Playwright `apps/web/e2e/us5-model-stacks.spec.ts` changes `ModelStackControl` count and observes picker change in `apps/web/components/combat/weapon-picker.tsx`
 
 ### Implementation for User Story 5
 
-- [ ] T064 [US5] Implement `ModelRow` helpers in `packages/domain/src/game/model-row.ts` (stack increment/decrement, row elimination)
-- [ ] T065 [US5] Add `apps/web/components/roster/model-stack-control.tsx` with shadcn `Button` +/- and live region announcements
-- [ ] T066 [US5] Add `apps/web/components/roster/model-row-list.tsx` for heterogeneous rows
-- [ ] T067 [US5] Wire model state into `attack-wizard-store.ts` and `attack-configuration.ts` validation paths in `packages/domain/src/combat/attack-configuration.ts`
+- [ ] T069 [US5] Implement `ModelRow` helpers in `packages/domain/src/game/model-row.ts` (stack increment/decrement, row elimination)
+- [ ] T070 [US5] Add `apps/web/components/roster/model-stack-control.tsx` with shadcn `Button` +/- and live region announcements
+- [ ] T071 [US5] Add `apps/web/components/roster/model-row-list.tsx` for heterogeneous rows
+- [ ] T072 [US5] Wire model state into `attack-wizard-store.ts` and `attack-configuration.ts` validation paths in `packages/domain/src/combat/attack-configuration.ts`
 
 **Checkpoint**: Model-level state integrated with attack configuration and rolls.
 
+- [ ] T073 [US5] Run `.cursor/skills/custom/pre-commit-design-review/SKILL.md` on the feature diff vs `HEAD` after this story's substantive UI batch per constitution (scope: `apps/web/components/roster/**`, `apps/web/components/combat/**`)
 ---
 
 ## Phase 9: User Story 3 — Best Coast Pairings preload (Priority: P2)
@@ -206,31 +212,32 @@
 
 ### Tests for User Story 3 (required per constitution) ⚠️
 
-- [ ] T068 [P] [US3] Vitest `apps/web/lib/bcp/bcp-adapter.test.ts` using `global.fetch` mock for success + `rate_limited` + `network`
-- [ ] T069 [P] [US3] Playwright `apps/web/e2e/us3-bcp-fallback.spec.ts` intercepts route to force error, expects paste fallback UI from `apps/web/components/bcp/bcp-import-flow.tsx`
+- [ ] T074 [P] [US3] Vitest `apps/web/lib/bcp/bcp-adapter.test.ts` using `global.fetch` mock for success + `rate_limited` + `network`
+- [ ] T075 [P] [US3] Playwright `apps/web/e2e/us3-bcp-fallback.spec.ts` intercepts route to force error, expects paste fallback UI from `apps/web/components/bcp/bcp-import-flow.tsx`
 
 ### Implementation for User Story 3
 
-- [ ] T070 [US3] Add DTO types in `apps/web/lib/bcp/bcp-types.ts` matching contract success/failure union
-- [ ] T071 [US3] Implement `apps/web/lib/bcp/bcp-adapter.ts` calling `apps/web/app/api/bcp/match/route.ts`
-- [ ] T072 [US3] Add Route Handler `apps/web/app/api/bcp/match/route.ts` with server-only env vars from [quickstart.md](./quickstart.md)
-- [ ] T073 [US3] Add TanStack hook `apps/web/lib/bcp/use-bcp-match.ts` (query key includes `eventId`, `matchId`)
-- [ ] T074 [US3] Add `apps/web/components/bcp/bcp-import-flow.tsx` and entry from `apps/web/app/games/new/page.tsx` behind `process.env.FEATURE_BCP_IMPORT`
+- [ ] T076 [US3] Add DTO types in `apps/web/lib/bcp/bcp-types.ts` matching contract success/failure union
+- [ ] T077 [US3] Implement `apps/web/lib/bcp/bcp-adapter.ts` calling `apps/web/app/api/bcp/match/route.ts`
+- [ ] T078 [US3] Add Route Handler `apps/web/app/api/bcp/match/route.ts` with server-only env vars from [quickstart.md](./quickstart.md)
+- [ ] T079 [US3] Add TanStack hook `apps/web/lib/bcp/use-bcp-match.ts` (query key includes `eventId`, `matchId`)
+- [ ] T080 [US3] Add `apps/web/components/bcp/bcp-import-flow.tsx` and entry from `apps/web/app/games/new/page.tsx` behind `process.env.FEATURE_BCP_IMPORT`
 
 **Checkpoint**: BCP path optional; paste always works.
 
+- [ ] T081 [US3] Run `.cursor/skills/custom/pre-commit-design-review/SKILL.md` on the feature diff vs `HEAD` after this story's substantive UI batch per constitution (scope: `apps/web/components/bcp/**`, `apps/web/app/api/bcp/**`, `apps/web/lib/bcp/**`)
 ---
 
 ## Phase 10: Polish & Cross-Cutting Concerns
 
 **Purpose**: Storybook coverage, constitution design review, PWA verification, docs.
 
-- [ ] T075 [P] Add Storybook story `apps/web/components/combat/dice-stage-breakdown.stories.tsx`
-- [ ] T076 [P] Add Storybook story `apps/web/components/roster/model-stack-control.stories.tsx`
-- [ ] T077 [P] Add Storybook story `apps/web/components/combat/modifier-bar.stories.tsx`
-- [ ] T078 Run `.cursor/skills/custom/pre-commit-design-review/SKILL.md` on the feature diff vs `HEAD` after UI batches per constitution
-- [ ] T079 Document PWA manual test results and Lighthouse scores in `apps/web/docs/PWA-VERIFICATION.md` (create folder if missing)
-- [ ] T080 Validate commands in [quickstart.md](./quickstart.md) end-to-end and update `specs/001-40k-auto-dice/quickstart.md` if commands drift
+- [ ] T082 [P] Add Storybook story `apps/web/components/combat/dice-stage-breakdown.stories.tsx`
+- [ ] T083 [P] Add Storybook story `apps/web/components/roster/model-stack-control.stories.tsx`
+- [ ] T084 [P] Add Storybook story `apps/web/components/combat/modifier-bar.stories.tsx`
+- [ ] T085 Run `.cursor/skills/custom/pre-commit-design-review/SKILL.md` on the feature diff vs `HEAD` after Phase 10 Storybook/PWA/doc edits per constitution (final polish pass; per-story reviews already above)
+- [ ] T086 Document PWA manual test results and Lighthouse scores in `apps/web/docs/PWA-VERIFICATION.md` (create folder if missing)
+- [ ] T087 Validate commands in [quickstart.md](./quickstart.md) end-to-end and update `specs/001-40k-auto-dice/quickstart.md` if commands drift
 
 ---
 
@@ -265,13 +272,14 @@ US1 → US3 (BCP)  [optional parallel after US1]
 2. Domain types and pure functions (`packages/domain`)  
 3. Adapters and browser I/O (`apps/web/lib/**`)  
 4. UI (`apps/web/components/**`, `apps/web/app/**`)  
-5. Repository / store integration
+5. Repository / store integration  
+6. Run the story’s **pre-commit design review** task (same skill as Phase 10 T085) on the feature diff vs `HEAD` after substantive UI for that story
 
 ### Parallel Opportunities
 
 - **Phase 1**: T002, T003, T004, T006, T008, T009, T011, T013 in parallel after T001 exists (watch lockfile merge conflicts).
 - **Phase 2**: T017 parallel with T019–T022 once T015–T016 exist.
-- **Within US7**: T053–T055 parallel; T057 parallel after T056 started.
+- **Within US7**: T057–T059 parallel; T061 parallel after T060 started.
 - **Cross-team**: After Phase 2, **US3** (BCP) can proceed in parallel with **US4–US7** chain if BCP developer does not touch dice files.
 
 ---
@@ -299,7 +307,7 @@ apps/web/e2e/us7-roll-mobile.spec.ts
 
 4. Add **US5** (model stacks) → rerun attack + roll tests  
 5. Add **US3** (BCP) with feature flag → contract tests + mocked E2E  
-6. **Phase 10** polish (Storybook, PWA verification doc, design review)
+6. **Phase 10** polish (Storybook, PWA verification doc, final design review **T085**)
 
 ### Suggested MVP scope
 
@@ -312,27 +320,27 @@ apps/web/e2e/us7-roll-mobile.spec.ts
 
 | Metric | Value |
 |--------|--------|
-| **Total tasks** | 80 |
+| **Total tasks** | 87 |
 | **Phase 1** | 14 |
 | **Phase 2** | 8 |
-| **US1** | 8 (2 test + 6 impl) |
-| **US2** | 8 (2 test + 6 impl) |
-| **US4** | 8 (2 test + 6 impl) |
-| **US6** | 6 (2 test + 4 impl) |
-| **US7** | 9 (3 test + 6 impl) |
-| **US5** | 6 (2 test + 4 impl) |
-| **US3** | 7 (2 test + 5 impl) |
+| **US1** | 9 (2 test + 6 impl + 1 design review) |
+| **US2** | 9 (2 test + 6 impl + 1 design review) |
+| **US4** | 9 (2 test + 6 impl + 1 design review) |
+| **US6** | 7 (2 test + 4 impl + 1 design review) |
+| **US7** | 10 (3 test + 6 impl + 1 design review) |
+| **US5** | 7 (2 test + 4 impl + 1 design review) |
+| **US3** | 8 (2 test + 5 impl + 1 design review) |
 | **Polish** | 6 |
 | **Parallel-friendly tasks** | 31 marked `[P]` |
 
-**Format validation**: All tasks use `- [ ]`, sequential **T001–T080**, story phases include **[USn]**, and each line names at least one **path** under `auto-dice/` (`apps/web/...` or `packages/domain/...` or `tooling/...` or `eslint.config.mjs`).
+**Format validation**: All tasks use `- [ ]`, sequential **T001–T087**, story phases include **[USn]**, and each line names at least one **path** under `auto-dice/` (`apps/web/...` or `packages/domain/...` or `tooling/...` or `eslint.config.mjs`).
 
 ---
 
 ## Notes
 
 - When a task touches `packages/domain`, follow **red → green → refactor** with Vitest.  
-- After each story checkpoint, run **`pnpm test`** at root and **targeted Playwright** for that story’s `apps/web/e2e/us*.spec.ts`.  
+- After each story checkpoint, run **`pnpm test`** at root, **targeted Playwright** for that story’s `apps/web/e2e/us*.spec.ts`, and the story’s **pre-commit design review** checkbox.  
 - **BCP secrets** never use `NEXT_PUBLIC_*` prefix (see [quickstart.md](./quickstart.md)).
 
 ---
